@@ -1,0 +1,15 @@
+services:
+  fetta:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - .:/app
+    working_dir: /app
+    init: true
+    ipc: host
+    ports:
+      - "127.0.0.1:5678:5678"
+      - "127.0.0.1:8888:8888"
+    environment:
+      UV_PROJECT_ENVIRONMENT: /home/pwuser/.venv
