@@ -32,16 +32,104 @@ Don't call `asyncio.run()` from inside an async function that
 raises `RuntimeError`. The bridge is for the outermost layer of
 sync programs only.
 
-## Development
+## Install
 
-All commands run inside Docker so the host stays clean.
+`fetta` is not on PyPI yet. Install directly from GitHub.
 
-    make up          # build image and start the container in the background
-    make down        # stop and remove the container (keeps the image)
-    make start       # start a previously created container
-    make stop        # stop the running container without removing it
-    make jupyter     # launch JupyterLab inside the container on port 8888
-    make sync        # install the project (editable) inside the container
-    make test        # run the test suite with pytest
-    make smoke       # manual smoke test against a predefined url
-    make shell       # open an interactive bash shell inside the container
+### As a library
+
+With uv (recommended):
+
+    uv add "fetta @ git+https://github.com/spapulin/fetta.git"
+
+With pip:
+
+    pip install "fetta @ git+https://github.com/spapulin/fetta.git"
+
+For browser-based fetching, also install Chromium:
+
+    # With uv
+    uv run playwright install chromium --with-deps
+
+    # With pip (venv activated)
+    python -m playwright install chromium --with-deps
+
+`--with-deps` installs system libraries and requires `sudo` on Linux.
+On macOS, drop the flag. 
+
+Skip this step entirely if you only use `HttpFetcher`.
+
+### Set up for development
+
+#### With Docker
+
+    git clone https://github.com/spapulin/fetta.git
+    cd fetta
+
+    make up      # build image, start container
+    make sync    # install dependencies in the container
+    make test    # run tests in the container
+
+Playwright browsers and system libraries are baked into the image.
+
+**Optional**: IDE autocompletion
+
+PyCharm and other IDEs need a local Python interpreter for
+autocompletion and "go to definition". Create a lightweight
+host venv - runtime packages only, no dev tools, no browsers:
+
+    # With uv
+    uv venv
+    uv pip install -e .
+
+    # With pip
+    python -m venv .venv
+    source .venv/bin/activate
+    pip install -e .
+
+Point your IDE at `.venv/bin/python`.
+
+Code still runs inside Docker (`make test`). The host venv is
+only for the editor - it has no Playwright browsers and cannot
+execute `BrowserFetcher`.
+
+#### Without Docker
+
+    git clone https://github.com/spapulin/fetta.git
+    cd fetta
+
+    uv sync --dev
+    uv run playwright install chromium --with-deps
+    uv run pytest
+
+## Quickstart
+
+The fastest way to try `fetta` is the Jupyter notebook:
+
+    notebooks/quickstart.ipynb
+
+It walks through:
+
+- Fetching a static page with `HttpFetcher`
+- Rendering a JavaScript-heavy page with `BrowserFetcher`
+- Using `SmartFetcher` to pick the right engine automatically
+- Extracting text and inspecting the result
+
+### Running the notebook
+
+With Docker (recommended):
+
+    make jupyter
+
+Then open http://localhost:8888 and navigate to `notebooks/quickstart.ipynb`.
+
+Without Docker:
+
+    uv run jupyter lab
+
+## Requirements
+
+- Python 3.12+
+- Playwright browsers (Chromium) - only for `BrowserFetcher` and `SmartFetcher`
+- Docker - only for development
+
