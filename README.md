@@ -40,11 +40,11 @@ sync programs only.
 
 With uv (recommended):
 
-    uv add "fetta @ git+https://github.com/spapulin/fetta.git"
+    uv add fetta
 
 With pip:
 
-    pip install "fetta @ git+https://github.com/spapulin/fetta.git"
+    pip install fetta
 
 For browser-based fetching, also install Chromium:
 
@@ -58,6 +58,19 @@ For browser-based fetching, also install Chromium:
 On macOS, drop the flag. 
 
 Skip this step entirely if you only use `HttpFetcher`.
+
+Development version
+
+The latest unreleased code from `main`. May contain bugs, may
+break without notice. Use only if you need a fix that hasn't
+shipped to PyPI yet.
+
+    uv add "fetta @ git+https://github.com/spapulin/fetta.git"
+    pip install "fetta @ git+https://github.com/spapulin/fetta.git"
+
+For reproducible installs, pin to a tag or commit:
+
+    uv add "fetta @ git+https://github.com/spapulin/fetta.git@v0.1.0"
 
 ### Set up for development
 
@@ -133,3 +146,6 @@ Without Docker:
 - Playwright browsers (Chromium) - only for `BrowserFetcher` and `SmartFetcher`
 - Docker - only for development
 
+## License
+
+MIT — see [LICENSE](LICENSE)
