@@ -4,14 +4,27 @@ version = "0.1.0"
 description = "Tool that fetches web pages for assistants"
 readme = "README.md"
 authors = [{ name = "Sergei" }]
+license = "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.12",
+]
 requires-python = ">=3.12"
 dependencies = [
-    "beautifulsoup4>=4.15.0",
+    "beautifulsoup4>=4.15.0,<5",
     "playwright==1.63.0",
+    "requests>=2.34.2,<3"
 ]
 
 [project.scripts]
 fetta = "fetta:main"
+
+[project.urls]
+Homepage = "https://github.com/spapulin/fetta"
+Repository = "https://github.com/spapulin/fetta"
+Issues = "https://github.com/spapulin/fetta/issues"
 
 [build-system]
 requires = ["uv_build>=0.12.17,<0.13.0"]
