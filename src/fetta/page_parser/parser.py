@@ -39,12 +39,14 @@ def parse_html(
         output["raw_text"] = raw_soup.get_text("\n", strip=True)
 
     # Content runs on a cleaned copy. clean_html copies by default, so
-    # raw_soup stays intact for any later stage
-    if "html" in include:
+    # node stays intact for any later stage
+    output["html"] = ""
+    if "html" in include or "text" in include:
         node = extract_main_content(raw_soup)
         cleaned_node = clean_html(node)
         minified_html, text = minify_html(cleaned_node, inplace=True)
-        output["html"] = minified_html
+        if "html" in include:
+            output["html"] = minified_html
         if "text" in include:
             output["text"] = text
 
