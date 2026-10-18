@@ -5,10 +5,7 @@ from .helpers import base_url, canonical_url
 from ..models import PageMetadata
 
 
-def extract_favicon(
-        soup: BeautifulSoup,
-        page_url: str | None = None
-) -> str | None:
+def extract_favicon(soup: BeautifulSoup, page_url: str | None = None) -> str | None:
     """Return absolute URL of the page's favicon, or None."""
     for link in soup.find_all("link", href=True):
         rels = link.get("rel") or []
@@ -20,16 +17,9 @@ def extract_favicon(
     return urljoin(page_url, "/favicon.ico") if page_url else None
 
 
-def extract_metadata(
-        soup: BeautifulSoup,
-        page_url: str | None = None
-) -> PageMetadata:
+def extract_metadata(soup: BeautifulSoup, page_url: str | None = None) -> PageMetadata:
 
-    def meta(
-            *,
-            prop: str | None = None,
-            name: str | None = None
-    ) -> str | None:
+    def meta(*, prop: str | None = None, name: str | None = None) -> str | None:
         attrs = {k: v for k, v in (("property", prop), ("name", name)) if v}
         tag = soup.find("meta", attrs=attrs)
         return tag["content"] if tag and tag.get("content") else None

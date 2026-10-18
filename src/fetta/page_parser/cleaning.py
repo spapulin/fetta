@@ -27,15 +27,19 @@ def clean_html(node: Tag, *, inplace: bool = False) -> Tag:
         comment.extract()
 
     for tag in node.find_all(True):
-
         if tag.name in STRUCTURAL or tag.decomposed or not tag.attrs:
             continue
 
-        attrs = " ".join(filter(None, (
-            " ".join(tag.get("class", [])),
-            tag.get("id", ""),
-            tag.get("role", ""),
-        )))
+        attrs = " ".join(
+            filter(
+                None,
+                (
+                    " ".join(tag.get("class", [])),
+                    tag.get("id", ""),
+                    tag.get("role", ""),
+                ),
+            )
+        )
         if attrs and NOISE_RE.search(attrs):
             tag.decompose()
 
@@ -43,10 +47,7 @@ def clean_html(node: Tag, *, inplace: bool = False) -> Tag:
 
 
 def minify_html(
-        node: Tag,
-        *,
-        max_chars: int = 25_000,
-        inplace: bool = False
+    node: Tag, *, max_chars: int = 25_000, inplace: bool = False
 ) -> tuple[str, str | None]:
     """Strip unwanted tags/attrs and collapse whitespace.
 

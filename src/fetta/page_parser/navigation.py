@@ -1,5 +1,11 @@
 from bs4 import BeautifulSoup
-from .constants import NAV_CONTAINERS, SKIP_SCHEMES, SKIP_PATH_PARTS, NAV_HEADER_SELECTOR, NAV_FOOTER_SELECTOR
+from .constants import (
+    NAV_CONTAINERS,
+    SKIP_SCHEMES,
+    SKIP_PATH_PARTS,
+    NAV_HEADER_SELECTOR,
+    NAV_FOOTER_SELECTOR,
+)
 from .helpers import base_url, is_http, resolve
 from ..models import Link
 
@@ -25,14 +31,7 @@ def extract_navigation(soup: BeautifulSoup, page_url: str | None = None) -> list
             if not text:
                 continue
             seen.add(abs_url)
-            links.append(
-                Link(
-                    text=text,
-                    url=abs_url,
-                    external=host != base_host,
-                    section=section
-                )
-            )
+            links.append(Link(text=text, url=abs_url, external=host != base_host, section=section))
 
     def pick(selectors, section):
         for sel in selectors:

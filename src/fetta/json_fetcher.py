@@ -16,7 +16,7 @@ class JsonFetcher(BaseFetcher):
         *,
         wait_until: str = "load",
         timeout_ms: int = 30_000,
-        include: tuple[str, ...] = ("metadata", ),
+        include: tuple[str, ...] = ("metadata",),
         **kwargs,
     ) -> FetchResult:
 

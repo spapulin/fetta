@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from fetta.models import FetchResult, PageContent
-from fetta.page_parser.constants import DEFAULT_SECTIONS
-from fetta.page_parser.parser import parse_html
+from .models import FetchResult, PageContent
+from .page_parser.constants import DEFAULT_SECTIONS
+from .page_parser.parser import parse_html
 
 
 class BaseFetcher(ABC):
@@ -28,13 +28,13 @@ class BaseFetcher(ABC):
         await self.close()
 
     def _parse(
-            self,
-            html: str,
-            url: str,
-            status: int,
-            title: str = "",
-            csr_data: list[dict] = None,
-            include: tuple[str, ...] = DEFAULT_SECTIONS
+        self,
+        html: str,
+        url: str,
+        status: int,
+        title: str = "",
+        csr_data: list[dict] = None,
+        include: tuple[str, ...] = DEFAULT_SECTIONS
     ) -> FetchResult:
         """
         Turn raw HTML into a PageContent.
