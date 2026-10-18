@@ -24,6 +24,9 @@ sync:
 test:
 	docker compose exec fetta uv run pytest -v
 
+test-integration:
+	docker compose exec fetta uv run pytest -v --override-ini="addopts=" -m integration
+
 smoke:
 	docker compose exec fetta uv run python scripts/smoke.py
 
