@@ -1,11 +1,11 @@
 from typing import Any
 
-from fetta.protocol import FetcherProtocol
-from fetta.base import BaseFetcher
-from fetta.browser import BrowserManager
-from fetta.models import FetchResult
-from fetta.playwright_fetcher import PlaywrightFetcher
-from fetta.requests_fetcher import RequestsFetcher
+from .httpx_fetcher import HttpxFetcher
+from .protocol import FetcherProtocol
+from .base import BaseFetcher
+from .browser import BrowserManager
+from .models import FetchResult
+from .playwright_fetcher import PlaywrightFetcher
 
 
 class HttpFetcher(BaseFetcher):
@@ -13,7 +13,7 @@ class HttpFetcher(BaseFetcher):
     Fetches pages over plain HTTP (no browser, no JavaScript).
 
     A facade over pluggable HTTP engines. By default, it uses
-    RequestsFetcher (sync `requests` offloaded to a worker thread).
+    HttpxFetcher (sync `requests` offloaded to a worker thread).
     """
 
     def __init__(
@@ -21,7 +21,7 @@ class HttpFetcher(BaseFetcher):
         *,
         engine: FetcherProtocol | None = None,
     ) -> None:
-        self._engine: FetcherProtocol = engine or RequestsFetcher()
+        self._engine: FetcherProtocol = engine or HttpxFetcher()
 
     async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
         return await self._engine.fetch(url, **kwargs)
@@ -42,7 +42,7 @@ class BrowserFetcher(BaseFetcher):
         self,
         manager: BrowserManager,
         *,
-        engine: FetcherProtocol | None = None,
+        engine: FetcherProtocol | None = None
     ) -> None:
         self._engine: FetcherProtocol = engine or PlaywrightFetcher(manager)
 

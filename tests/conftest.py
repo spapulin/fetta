@@ -1,6 +1,5 @@
 import pytest
-import pytest_asyncio
-import requests_mock
+import respx
 
 from fetta import HttpFetcher, BrowserManager, BrowserFetcher
 
@@ -12,7 +11,13 @@ async def http_fetcher():
     await fetcher.close()
 
 
-@pytest_asyncio.fixture
+@pytest.fixture
+def mock_httpx():
+    with respx.mock(assert_all_called=False) as mocker:
+        yield mocker
+
+
+@pytest.fixture(scope="session")
 async def browser_manager():
     manager = BrowserManager()
     await manager.start()
@@ -20,14 +25,8 @@ async def browser_manager():
     await manager.stop()
 
 
-@pytest_asyncio.fixture
+@pytest.fixture
 async def browser_fetcher(browser_manager):
     fetcher = BrowserFetcher(browser_manager)
     yield fetcher
     await fetcher.close()
-
-
-@pytest.fixture
-def mock_requests():
-    with requests_mock.Mocker() as mocker:
-        yield mocker

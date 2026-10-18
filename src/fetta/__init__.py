@@ -1,15 +1,18 @@
-from fetta.browser import BrowserManager
-from fetta.fetchers import BrowserFetcher, HttpFetcher
-from fetta.json_fetcher import JsonFetcher
-from fetta.models import FetchResult, Link, Image, PageContent, PageMetadata
-from fetta.protocol import FetcherProtocol
-from fetta.requests_fetcher import RequestsFetcher
+from .browser import BrowserManager
+from .fetchers import BrowserFetcher, HttpFetcher
+from .json_fetcher import JsonFetcher
+from .models import Link, Image, PageContent, PageMetadata, FetchResult
+from .protocol import FetcherProtocol
 
 __all__ = [
     "BrowserManager",
+    "PageContent",
+    "Link",
+    "Image",
+    "PageMetadata",
     "FetchResult",
-    "PageContent", "Link", "Image", "PageMetadata",
     "BrowserFetcher",
     "HttpFetcher",
     "FetcherProtocol",
+    "JsonFetcher",
 ]

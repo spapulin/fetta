@@ -11,7 +11,7 @@ async def main() -> None:
         page = await fetcher.fetch("https://google.com")
         print(f"Title: {page.title}")
         print(f"Status: {page.status}")
-        print(f"Text preview: {page.text[:200]}")
+        print(f"Text preview: {page.content.text[:200]}")
     finally:
         await manager.stop()
 

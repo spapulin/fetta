@@ -15,7 +15,7 @@ requires-python = ">=3.12"
 dependencies = [
     "beautifulsoup4>=4.15.0,<5",
     "playwright==1.63.0",
-    "requests>=2.34.2,<3"
+    "httpx>=0.28.1,<1"
 ]
 
 [project.scripts]
@@ -37,7 +37,7 @@ dev = [
     "jupyterlab>=4.6.4",
     "pytest>=9.1.1",
     "pytest-asyncio>=1.4.0",
-    "requests-mock>=1.12.1",
+    "respx>=0.23.1,<1",
     "ruff>=0.16.8",
 ]
 
@@ -48,6 +48,8 @@ module-root = "src"
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "session"
 asyncio_default_test_loop_scope = "session"
+markers = ["integration: tests that hit the real network"]
+addopts = "-m 'not integration'"
 testpaths = ["tests"]
 
 [tool.ruff]
