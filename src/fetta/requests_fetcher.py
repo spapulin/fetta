@@ -4,7 +4,8 @@ from typing import Any
 import requests
 
 from fetta.base import BaseFetcher
-from fetta.models import PageContent
+from fetta.models import FetchResult
+from fetta.page_parser.constants import DEFAULT_SECTIONS
 
 
 class RequestsFetcher(BaseFetcher):
@@ -43,11 +44,17 @@ class RequestsFetcher(BaseFetcher):
         response.raise_for_status()
         return response.text, response.status_code
 
-    async def fetch(self, url: str, **kwargs: Any) -> PageContent:
+    async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
         # Hand the blocking call to a thread. The event loop is free
         # to handle other requests while this thread waits on the socket.
         html, status = await asyncio.to_thread(self._get_sync, url)
-        return self._parse(html, url, status)
+        include = kwargs.get("include") or DEFAULT_SECTIONS
+        return self._parse(
+            html=html,
+            url=url,
+            status=status,
+            include=include
+        )
 
     async def close(self) -> None:
         self._session.close()

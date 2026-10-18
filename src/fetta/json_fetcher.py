@@ -1,6 +1,6 @@
 from fetta.base import BaseFetcher
 from fetta.browser import BrowserManager
-from fetta.models import PageContent
+from fetta.models import FetchResult
 
 
 _BLOCK = {"image", "media", "font"}
@@ -16,8 +16,9 @@ class JsonFetcher(BaseFetcher):
         *,
         wait_until: str = "load",
         timeout_ms: int = 30_000,
+        include: tuple[str, ...] = ("metadata", ),
         **kwargs,
-    ) -> PageContent:
+    ) -> FetchResult:
 
         json_responses: list[dict] = []
 
@@ -50,7 +51,14 @@ class JsonFetcher(BaseFetcher):
             html = await page.content()
             title = await page.title()
 
-        return self._parse(html, url, response.status if response else 0, title, json_responses)
+        return self._parse(
+            html=html,
+            url=url,
+            status=response.status if response else 0,
+            title=title,
+            csr_data=json_responses,
+            include=include
+        )
 
     async def close(self) -> None:
         # Browser lifecycle is owned by BrowserManager, not by the fetcher.

@@ -1,7 +1,7 @@
 from fetta.base import BaseFetcher
 from fetta.browser import BrowserManager
-from fetta.models import PageContent
-
+from fetta.models import FetchResult
+from fetta.page_parser.constants import DEFAULT_SECTIONS
 
 _BLOCK = {"image", "media", "font"}
 
@@ -17,8 +17,9 @@ class PlaywrightFetcher(BaseFetcher):
         wait_for: str | None = None,
         wait_until: str = "load",
         timeout_ms: int = 30_000,
+        include: tuple[str, ...] = DEFAULT_SECTIONS,
         **kwargs,
-    ) -> PageContent:
+    ) -> FetchResult:
         async with self._browser.page() as page:
             await page.route("**/*", self._block_resources)
 
@@ -41,7 +42,13 @@ class PlaywrightFetcher(BaseFetcher):
             html = await page.content()
             title = await page.title()
 
-        return self._parse(html, url, response.status if response else 0, title)
+        return self._parse(
+            html=html,
+            url=url,
+            status=response.status if response else 0,
+            title=title,
+            include=include
+        )
 
     async def close(self) -> None:
         # Browser lifecycle is owned by BrowserManager, not by the fetcher.

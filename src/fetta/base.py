@@ -1,13 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from bs4 import BeautifulSoup
-
-from fetta.models import PageContent
-
-# Tags that never contain useful article text.
-# Kept module-level so subclasses can reference the same tuple.
-_STRIP_TAGS = ("script", "style", "nav", "footer", "header", "noscript")
+from fetta.models import FetchResult, PageContent
+from fetta.page_parser.parser import parse_html
 
 
 class BaseFetcher(ABC):
@@ -16,7 +11,7 @@ class BaseFetcher(ABC):
     """
 
     @abstractmethod
-    async def fetch(self, url: str, **kwargs: Any) -> PageContent:
+    async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
         """Fetch a page and return its parsed content."""
         pass
 
@@ -32,8 +27,14 @@ class BaseFetcher(ABC):
         await self.close()
 
     def _parse(
-        self, html: str, url: str, status: int, title: str = "", data: list[dict] = None
-    ) -> PageContent:
+            self,
+            html: str,
+            url: str,
+            status: int,
+            title: str = "",
+            csr_data: list[dict] = None,
+            include: tuple[str, ...] = ("metadata", "links", "html")
+    ) -> FetchResult:
         """
         Turn raw HTML into a PageContent.
 
@@ -46,16 +47,28 @@ class BaseFetcher(ABC):
             status: HTTP status code.
             title: Pre-extracted title. If empty, the <title> tag is used.
         """
-        soup = BeautifulSoup(html, "html.parser")
+        parsed_content = parse_html(
+            html=html,
+            page_url=url,
+            include=include
+        )
+        page_metadata = parsed_content.get("metadata") or {}
 
-        # Extract title before stripping tags as some sites put <style>
-        # inside <head>, and decomposing early keeps the tree clean.
-        if not title and soup.title is not None:
-            title = soup.title.get_text(strip=True)
-
-        for tag in soup(_STRIP_TAGS):
-            tag.decompose()
-
-        text = soup.get_text(separator="\n", strip=True)
-
-        return PageContent(url=url, title=title, text=text, html=html, data=data, status=status)
+        return FetchResult(
+            url=url,
+            content=PageContent(
+                html=parsed_content.get("html") or "",
+                text=parsed_content.get("text"),
+                raw_html=parsed_content.get("raw_html"),
+                raw_text=parsed_content.get("raw_text"),
+                metadata=page_metadata,
+                links=tuple(parsed_content.get("links") or []),
+                images=parsed_content.get("images") or [],
+                csr_data=tuple(csr_data) if csr_data is not None else None
+            ),
+            title=page_metadata.get("title"),
+            icon=page_metadata.get("icon"),
+            image=page_metadata.get("image"),
+            description=page_metadata.get("description"),
+            status=status
+        )

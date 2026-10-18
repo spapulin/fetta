@@ -3,7 +3,7 @@ from typing import Any
 from fetta.protocol import FetcherProtocol
 from fetta.base import BaseFetcher
 from fetta.browser import BrowserManager
-from fetta.models import PageContent
+from fetta.models import FetchResult
 from fetta.playwright_fetcher import PlaywrightFetcher
 from fetta.requests_fetcher import RequestsFetcher
 
@@ -23,7 +23,7 @@ class HttpFetcher(BaseFetcher):
     ) -> None:
         self._engine: FetcherProtocol = engine or RequestsFetcher()
 
-    async def fetch(self, url: str, **kwargs: Any) -> PageContent:
+    async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
         return await self._engine.fetch(url, **kwargs)
 
     async def close(self) -> None:
@@ -46,7 +46,7 @@ class BrowserFetcher(BaseFetcher):
     ) -> None:
         self._engine: FetcherProtocol = engine or PlaywrightFetcher(manager)
 
-    async def fetch(self, url: str, **kwargs: Any) -> PageContent:
+    async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
         return await self._engine.fetch(url, **kwargs)
 
     async def close(self) -> None:
