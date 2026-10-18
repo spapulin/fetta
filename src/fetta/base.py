@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 
 from fetta.models import FetchResult, PageContent
+from fetta.page_parser.constants import DEFAULT_SECTIONS
 from fetta.page_parser.parser import parse_html
 
 
@@ -33,7 +34,7 @@ class BaseFetcher(ABC):
             status: int,
             title: str = "",
             csr_data: list[dict] = None,
-            include: tuple[str, ...] = ("metadata", "links", "html")
+            include: tuple[str, ...] = DEFAULT_SECTIONS
     ) -> FetchResult:
         """
         Turn raw HTML into a PageContent.

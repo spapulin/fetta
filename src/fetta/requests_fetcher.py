@@ -44,11 +44,15 @@ class RequestsFetcher(BaseFetcher):
         response.raise_for_status()
         return response.text, response.status_code
 
-    async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
+    async def fetch(
+            self, url: str,
+            *,
+            include: tuple[str, ...] = DEFAULT_SECTIONS,
+            **kwargs: Any
+    ) -> FetchResult:
         # Hand the blocking call to a thread. The event loop is free
         # to handle other requests while this thread waits on the socket.
         html, status = await asyncio.to_thread(self._get_sync, url)
-        include = kwargs.get("include") or DEFAULT_SECTIONS
         return self._parse(
             html=html,
             url=url,
