@@ -22,7 +22,7 @@ from fetta import HttpFetcher
 async def fetch_content(url: str) -> str:
     async with HttpFetcher() as fetcher:
         page = await fetcher.fetch(url)
-        return page.text
+        return page.content.html
 
 # Sync entry point is top of a script, not inside an async function
 text = asyncio.run(fetch_content("https://example.com"))
@@ -33,8 +33,6 @@ raises `RuntimeError`. The bridge is for the outermost layer of
 sync programs only.
 
 ## Install
-
-`fetta` is not on PyPI yet. Install directly from GitHub.
 
 ### As a library
 
@@ -59,7 +57,7 @@ On macOS, drop the flag.
 
 Skip this step entirely if you only use `HttpFetcher`.
 
-Development version
+### Development version
 
 The latest unreleased code from `main`. May contain bugs, may
 break without notice. Use only if you need a fix that hasn't
