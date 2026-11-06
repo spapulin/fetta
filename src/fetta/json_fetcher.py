@@ -1,12 +1,14 @@
-from fetta.base import BaseFetcher
-from fetta.browser import BrowserManager
-from fetta.models import FetchResult
-
+from .base import BaseFetcher
+from .browser import BrowserManager
+from .models import FetchResult, FetcherKind
 
 _BLOCK = {"image", "media", "font"}
 
 
 class JsonFetcher(BaseFetcher):
+
+    fetcher_kind: FetcherKind = "browser"
+
     def __init__(self, browser: BrowserManager) -> None:
         self._browser = browser
 

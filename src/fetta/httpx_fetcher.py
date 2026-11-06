@@ -2,7 +2,7 @@ from typing import Any
 
 import httpx
 
-from .models import FetchResult
+from .models import FetchResult, FetcherKind
 from .base import BaseFetcher
 from .page_parser.constants import DEFAULT_SECTIONS
 
@@ -15,6 +15,8 @@ class HttpxFetcher(BaseFetcher):
     create a new client per request (that defeats pooling and adds
     TLS-handshake overhead).
     """
+
+    fetcher_kind: FetcherKind = "http"
 
     def __init__(self, *, timeout: float = 10.0, http2: bool = False) -> None:
         self._client = httpx.AsyncClient(

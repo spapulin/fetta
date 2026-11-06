@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from .models import FetchResult, PageContent
+from .models import FetchResult, PageContent, PageMetadata, FetcherKind
 from .page_parser.constants import DEFAULT_SECTIONS
 from .page_parser.parser import parse_html
 
@@ -10,6 +10,8 @@ class BaseFetcher(ABC):
     """
     Abstract base class for fetchers.
     """
+
+    fetcher_kind: FetcherKind
 
     @abstractmethod
     async def fetch(self, url: str, **kwargs: Any) -> FetchResult:
@@ -62,7 +64,7 @@ class BaseFetcher(ABC):
                 text=parsed_content.get("text"),
                 raw_html=parsed_content.get("raw_html"),
                 raw_text=parsed_content.get("raw_text"),
-                metadata=page_metadata,
+                metadata=parsed_content.get("metadata"),
                 links=tuple(parsed_content.get("links") or []),
                 images=parsed_content.get("images") or [],
                 csr_data=tuple(csr_data) if csr_data is not None else None
@@ -71,5 +73,6 @@ class BaseFetcher(ABC):
             icon=page_metadata.get("icon"),
             image=page_metadata.get("image"),
             description=page_metadata.get("description"),
-            status=status
+            status=status,
+            fetcher_kind=self.fetcher_kind
         )

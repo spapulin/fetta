@@ -1,12 +1,15 @@
 from fetta.base import BaseFetcher
 from fetta.browser import BrowserManager
-from fetta.models import FetchResult
+from fetta.models import FetchResult, FetcherKind
 from fetta.page_parser.constants import DEFAULT_SECTIONS
 
 _BLOCK = {"image", "media", "font"}
 
 
 class PlaywrightFetcher(BaseFetcher):
+
+    fetcher_kind: FetcherKind = "browser"
+
     def __init__(self, browser: BrowserManager) -> None:
         self._browser = browser
 
@@ -45,7 +48,7 @@ class PlaywrightFetcher(BaseFetcher):
         return self._parse(
             html=html,
             url=url,
-            status=response.status if response else 0,
+            status=response.status if response else 500,
             title=title,
             include=include
         )

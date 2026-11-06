@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import TypedDict
+from typing import TypedDict, Literal
 
 
 class PageMetadata(TypedDict):
@@ -35,16 +35,19 @@ class PageContent:
     text: str | None
     raw_html: str | None
     raw_text: str | None
-    metadata: PageMetadata
+    metadata: PageMetadata | None
     links: tuple[Link, ...]
     images: tuple[Image, ...]
     csr_data: tuple[dict, ...] | None
 
 
+FetcherKind = Literal["http", "browser"]
+
 @dataclass(frozen=True, slots=True)
 class FetchResult:
     url: str
     status: int
+    fetcher_kind: FetcherKind
     # Meta
     title: str | None
     icon: str | None
