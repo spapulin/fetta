@@ -1,5 +1,5 @@
 from .browser import BrowserManager
-from .fetchers import BrowserFetcher, HttpFetcher
+from .fetchers import BrowserFetcher, HttpFetcher, SmartFetcher
 from .json_fetcher import JsonFetcher
 from .models import Link, Image, PageContent, PageMetadata, FetchResult
 from .protocol import FetcherProtocol
@@ -15,4 +15,5 @@ __all__ = [
     "HttpFetcher",
     "FetcherProtocol",
     "JsonFetcher",
+    "SmartFetcher"
 ]
