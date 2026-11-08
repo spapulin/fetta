@@ -75,7 +75,6 @@ class SmartFetcher(BaseFetcher):
         browser_fetcher: FetcherProtocol | None = None,
     ) -> None:
         html_engine: FetcherProtocol = html_fetcher or HttpxFetcher()
-        browser_fetcher: FetcherProtocol | None
         if not browser_fetcher and not manager:
             browser_engine = None
         else:
